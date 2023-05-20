@@ -40,10 +40,18 @@ class Test extends Phaser.Scene{
             graphics.clear().strokeLineShape(line);
         });
 
-        this.input.on('pointerup', () =>{
+        this.input.on('pointerup', (pointer) =>{
             // golf.enableBody(true, tee.x, tee.y - 100, true, true);
+            let distance = Phaser.Math.Distance.BetweenPoints(golf, pointer);
+            this.add.text(10, 10, `distance: ${distance}`);
+            if(distance < 100){
+                distance = 400;
+            }
+            else if(distance > 1000){
+                distance = 1000;
+            }
             if (golf.body.velocityx == undefined && golf.body.velocityy == undefined){
-                this.physics.velocityFromRotation(angle, 600, golf.body.velocity);
+                this.physics.velocityFromRotation(angle, distance, golf.body.velocity);
             }
             
         });
@@ -56,7 +64,7 @@ class Test extends Phaser.Scene{
 
         //implementing hole
         const goal = this.add.image(1800, 970, 'flag');
-        const zone = this.add.zone(goal.x, goal.y, 100, 100);
+        const zone = this.add.zone(goal.x, goal.y + 50, 100, 100);
         this.physics.add.existing(zone, true);
         this.physics.add.overlap(zone, golf, (_zone, golf) =>{
             golf.setAlpha(0.5);
@@ -67,7 +75,7 @@ class Test extends Phaser.Scene{
         this.physics.add.collider(golf, ground);
         
 
-        this.add.text(10, 10, `ball velocity: ${golf.body.velocityx}`);
+        this.add.text(10, 20, `ball speed: ${golf.body.speed}`);
     }
 }
 
