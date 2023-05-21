@@ -1,6 +1,6 @@
 // level implementation
 
-class Test extends Phaser.Scene{
+class Test extends PhysicsScene{
     constructor(){
         super('test');
     }
@@ -29,7 +29,8 @@ class Test extends Phaser.Scene{
         golf.setDamping(true);
         
         //implementing putting
-        // golf.disableBody(true, true);
+        this.setStroke(0);
+        let scoreBoard = this.add.text(10, 10, "Stroke: 0");
 
         let angle = 0;
 
@@ -43,15 +44,18 @@ class Test extends Phaser.Scene{
         this.input.on('pointerup', (pointer) =>{
             // golf.enableBody(true, tee.x, tee.y - 100, true, true);
             let distance = Phaser.Math.Distance.BetweenPoints(golf, pointer);
-            this.add.text(10, 10, `distance: ${distance}`);
-            if(distance < 100){
+
+            this.add.text(10, 30, `distance: ${distance}`);
+            if(distance < 400){
                 distance = 400;
             }
             else if(distance > 1000){
                 distance = 1000;
             }
             if (golf.body.velocityx == undefined && golf.body.velocityy == undefined){
-                this.physics.velocityFromRotation(angle, distance, golf.body.velocity);
+                this.physics.velocityFromRotation(angle, distance * 2, golf.body.velocity);
+                this.addStroke();
+                scoreBoard.setText("Strokes: " + this.stroke);
             }
             
         });
