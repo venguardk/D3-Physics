@@ -71,7 +71,9 @@ class Test extends PhysicsScene{
         const zone = this.add.zone(goal.x, goal.y + 50, 100, 100);
         this.physics.add.existing(zone, true);
         this.physics.add.overlap(zone, golf, (_zone, golf) =>{
-            golf.setAlpha(0.5);
+            this.time.delayedCall(1000, () =>{
+                this.gotoScene('score');
+            })
         })
 
         //colliders
@@ -80,6 +82,20 @@ class Test extends PhysicsScene{
         
 
         this.add.text(10, 20, `ball speed: ${golf.body.speed}`);
+    }
+}
+
+class Score extends PhysicsScene{
+    constructor(){
+        super("score");
+    }
+
+    create(){
+        this.add.text(10,10, 'Score');
+        this.add.text(10,20, `Total Strokes: ${this.checkStroke()}`);
+        this.add.rectangle(this.w * 0.75, 0, this.w * 0.25, this.h * 0.25).setOrigin(0, 0).setFillStyle(0xccd1d1);
+        this.add.text(this.w *0.75 + this.s, this.s)
+            .setText("Total Strokes: " + this.strokes);
     }
 }
 
@@ -97,6 +113,6 @@ const game = new Phaser.Game({
             gravity: {y: 100}
         }
     },
-    scene:[Test],
+    scene:[Test, Score],
     title: "Physics"
 });
